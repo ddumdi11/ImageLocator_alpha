@@ -1,8 +1,10 @@
 ﻿using FlaUI.Core.Input;
 using OpenCvSharp;
+using OpenCvSharp.Dnn;
 using OpenCvSharp.Extensions;
 using System;
 using System.Drawing;
+using System.Resources;
 using System.Runtime.InteropServices;
 
 namespace ImageLocator_alpha
@@ -18,8 +20,8 @@ namespace ImageLocator_alpha
         /// <param name="templateFilePath">Pfad zum Template-Bild</param>
         /// <param name="resultFilePath">Pfad, um das Ergebnisbild zu speichern</param>
         /// <returns>Den Punkt, an dem das Template gefunden wurde</returns>
-        public System.Drawing.Point? SearchTemplateOnEachMonitor(string templateFilePath, string resultFilePath)
-        {
+        public System.Drawing.Point? SearchTemplateOnEachMonitor(string templateFilePath, string resultFolderPath)
+        {        
             // Reset locatedPoint und maxMaxValOfMatches bei Mehrfachaufruf mit der selben Instanz
             locatedPoint = null;
             maxMaxValOfMatches = null;
@@ -35,12 +37,19 @@ namespace ImageLocator_alpha
 
 #if DEBUG
                     // Speichern des Screenshots pro Monitor
-                    string filePath = Path.Combine(resultFilePath, $"screenshot{hMonitor}.png");
+                    string filePath = Path.Combine(resultFolderPath, $"screenshot{hMonitor}.png");
                     screenshot.SaveImage(filePath);
 #endif
 
                     // Konvertiere den Screenshot in Graustufen
                     Cv2.CvtColor(screenshot, screenshot, ColorConversionCodes.BGRA2GRAY);
+
+#if DEBUG
+                    // Speichern des grau konvertierten Screenshots pro Monitor
+                    string greyFilePath = Path.Combine(resultFolderPath, $"screenshot{hMonitor}_grau.png");
+                    screenshot.SaveImage(greyFilePath);
+#endif
+
 
 #if DEBUG
                     // Drucke Typ pro Bild aus
@@ -73,7 +82,7 @@ namespace ImageLocator_alpha
                             Cv2.Rectangle(screenshot, match, new Scalar(0, 0, 255), 3); // Rotes Rechteck
 
                             // Speichern des Ergebnisses
-                            Cv2.ImWrite(resultFilePath.Replace(".png", $"_monitor_{hMonitor}.png"), screenshot);
+                            Cv2.ImWrite(filePath.Replace(".png", $"_result_monitor_{hMonitor}.png"), screenshot);
                         }
                         else
                         {

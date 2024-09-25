@@ -16,9 +16,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Resources\Pics2Find\eva_angebot_vertrag_ueberblick.PNG">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\Pics2Find\vlc_player.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="bin\Debug\net6.0-windows10.0.26100.0\Resources\Pics2Find\" />
+    <Folder Include="Resources\Results\" />
   </ItemGroup>
 
 </Project>

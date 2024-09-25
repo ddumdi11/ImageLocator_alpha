@@ -7,9 +7,10 @@ Console.WriteLine("Hello, World!");
 // Basisverzeichnis des ausgeführten Programms ermitteln
 string baseDirectory = AppContext.BaseDirectory;
 
+
 // Baue relative Pfade auf
-string templateFilePath = Path.Combine(baseDirectory, "Resources", "Pics2Find", "vlc_player.png");
-string resultFilePath = Path.Combine(baseDirectory, "Resources", "Results", "result_desktop.png");
+string templateFilePath = Path.Combine(baseDirectory, "Resources", "Pics2Find", "eva_angebot_vertrag_ueberblick.png");
+string resultFolderPath = Path.Combine(baseDirectory, "Resources", "Results");
 
 // Pfadüberprüfung
 if (!File.Exists(templateFilePath))
@@ -26,7 +27,7 @@ if (!Directory.Exists(Path.Combine(baseDirectory, "Resources", "Results")))
 
 
 LocateElementByPictureInDesktop locateElementByPictureInDesktop = new LocateElementByPictureInDesktop();
-Point? locatedPoint = locateElementByPictureInDesktop.SearchTemplateOnEachMonitor(templateFilePath, resultFilePath);
+Point? locatedPoint = locateElementByPictureInDesktop.SearchTemplateOnEachMonitor(templateFilePath, resultFolderPath);
 
 if (locatedPoint.HasValue)
 {
@@ -36,4 +37,4 @@ if (locatedPoint.HasValue)
 }
 
 // Mouse-Click auf Template bei Lokalisierung
-locateElementByPictureInDesktop.SearchAndClick(templateFilePath, resultFilePath);
+locateElementByPictureInDesktop.SearchAndClick(templateFilePath, resultFolderPath);
