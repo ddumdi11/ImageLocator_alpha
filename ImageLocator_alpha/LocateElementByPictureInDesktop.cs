@@ -1,4 +1,5 @@
-﻿using OpenCvSharp;
+﻿using FlaUI.Core.Input;
+using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using System;
 using System.Drawing;
@@ -6,10 +7,10 @@ using System.Runtime.InteropServices;
 
 namespace ImageLocator_alpha
 {
-    internal class LocateElementByPictureInDesktop
+    public class LocateElementByPictureInDesktop
     {
-        System.Drawing.Point locatedPoint;
-        double? maxMaxValOfMatches = null; // Verwende Nullable für klarere Intention
+        System.Drawing.Point? locatedPoint;
+        double? maxMaxValOfMatches; // Verwende Nullable für klarere Intention
 
         /// <summary>
         /// Sucht ein Template auf allen Monitoren und gibt den Punkt zurück.
@@ -17,8 +18,12 @@ namespace ImageLocator_alpha
         /// <param name="templateFilePath">Pfad zum Template-Bild</param>
         /// <param name="resultFilePath">Pfad, um das Ergebnisbild zu speichern</param>
         /// <returns>Den Punkt, an dem das Template gefunden wurde</returns>
-        public System.Drawing.Point SearchTemplateOnEachMonitor(string templateFilePath, string resultFilePath)
+        public System.Drawing.Point? SearchTemplateOnEachMonitor(string templateFilePath, string resultFilePath)
         {
+            // Reset locatedPoint und maxMaxValOfMatches bei Mehrfachaufruf mit der selben Instanz
+            locatedPoint = null;
+            maxMaxValOfMatches = null;
+
             // Template in Graustufen laden
             Mat template = Cv2.ImRead(templateFilePath, ImreadModes.Grayscale);
 
@@ -116,5 +121,16 @@ namespace ImageLocator_alpha
         public static extern bool EnumDisplayMonitors(IntPtr hdc, IntPtr lprcClip, MonitorEnumDelegate lpfnEnum, IntPtr dwData);
 
         public delegate bool MonitorEnumDelegate(IntPtr hMonitor, IntPtr hdcMonitor, ref RectX lprcMonitor, IntPtr dwData);
+
+
+        public void SearchAndClick(string templateFilePath, string resultFilePath)
+        {
+            System.Drawing.Point? clickPoint = SearchTemplateOnEachMonitor(templateFilePath, resultFilePath);
+            if (clickPoint.HasValue)
+            {
+                System.Drawing.Point clickablePoint = clickPoint.Value;
+                Mouse.Click(clickablePoint);
+            }
+        }
     }
 }
